@@ -1,0 +1,55 @@
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<div class="widget">
+		<div class="searcher">
+			<form>
+				Song: <input id="song-to-search" type="text">
+				<button type="submit" id="search-button" name="search">Search</button>
+			</form>
+		</div>
+		<div class="header">
+		<!-- Try adding/removing these classes: -->
+		<!-- disabled -->
+		<!-- playing -->
+		<div class="btn-play disabled"></div>
+
+		<div class="metadata">
+		  <p class="title">Hunger of The Pine</p>
+		  <p class="author">alt-J</p>
+
+		  <div class="seekbar">
+		    <progress value="5" max="30"></progress>
+		  </div>
+		</div>
+		</div>
+		<div class="cover">
+			<img src="https://i.scdn.co/image/04da6dfc1f5f45fdeba938a0cc71cf372524fd43">
+		</div>
+
+		<audio src="https://p.scdn.co/mp3-preview/8e9c5ffdc38e91659bfe8b6bd44650dfc25a3d31"></audio>
+	</div>
+
+	<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript">
+		$('#search-button').on('click', function(event){
+			event.preventDefault();
+			var term = $('#song-to-search').val();
+			console.log("Song to search: " + term);
+			var url = 'https://api.spotify.com/v1/search?q=' + term + '&type=track';
+			result = $.getJSON(url, showInfo);
+			function showInfo(result){
+				var song = result.tracks.items[0];
+				console.log(song);
+				$('.title').text(song.name);
+				$('.author').text(song.artists[0].name);
+				$('.cover').children($('img').attr('src', song.album.images[0].url));
+			}
+		});
+	</script>
+
+</body>
+</html>
