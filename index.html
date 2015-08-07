@@ -7,7 +7,7 @@
 	<div class="widget">
 		<div class="searcher">
 			<form>
-				Song: <input id="song-to-search" type="text">
+				Song: <input id="song-to-search" type="text" value="pastillas para dormir">
 				<button type="submit" id="search-button" name="search">Search</button>
 			</form>
 		</div>
@@ -30,7 +30,7 @@
 			<img src="https://i.scdn.co/image/04da6dfc1f5f45fdeba938a0cc71cf372524fd43">
 		</div>
 
-		<audio src="https://p.scdn.co/mp3-preview/8e9c5ffdc38e91659bfe8b6bd44650dfc25a3d31"></audio>
+		<audio class="js-player" src="https://p.scdn.co/mp3-preview/8e9c5ffdc38e91659bfe8b6bd44650dfc25a3d31"></audio>
 	</div>
 
 	<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
@@ -47,7 +47,19 @@
 				$('.title').text(song.name);
 				$('.author').text(song.artists[0].name);
 				$('.cover').children($('img').attr('src', song.album.images[0].url));
+				$('audio').attr('src', song.preview_url);
 			}
+		});
+
+		$('.btn-play').on('click', function(event){
+			event.preventDefault();
+			$('.btn-play').removeClass('disabled');
+			if($('.btn-play').hasClass('playing')){
+				$('.js-player').trigger('pause');
+			}else{
+				$('.js-player').trigger('play');
+			}
+			$('.btn-play').toggleClass('playing');
 		});
 	</script>
 
