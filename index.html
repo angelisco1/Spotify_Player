@@ -61,19 +61,16 @@
 	<script type="text/javascript">
 		$('#search-button').on('click', function(event){
 			event.preventDefault();
+			$('.btn-play').removeClass('playing');
 			var term = $('#song-to-search').val();
 			console.log("Song to search: " + term);
 			var url = 'https://api.spotify.com/v1/search?q=' + term + '&type=track';
 			result = $.getJSON(url, showInfo);
 			function showInfo(result){
 				var song = result.tracks.items[0];
-				console.log(song);
 				$('.title').text(song.name);
-				//$('.author').text(song.artists[0].name);
 				$('.cover').children($('img').attr('src', song.album.images[0].url));
 				$('audio').attr('src', song.preview_url);
-				// $('.author-link').attr('href', song.artists[0].href);
-				//var author_link = '<button type="button" class="btn btn-link" id="' + song.artists[0].id + '">' + song.artists[0].name + '</button>';
 				var author_link = '<a class="artist-link" data-target="#modal" id="' + song.artists[0].id + '">' + song.artists[0].name + '</a>';
 				$('.author').empty();
 				$('.author').append(author_link);
