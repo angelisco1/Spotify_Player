@@ -1,7 +1,8 @@
 <html>
 <head>
-	<title></title>
+	<title>Spotify Player</title>
 	<link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 </head>
 <body>
 	<div class="widget">
@@ -17,23 +18,46 @@
 		<!-- playing -->
 		<div class="btn-play disabled"></div>
 
-		<div class="metadata">
-		  <p class="title">Hunger of The Pine</p>
-		  <p class="author">alt-J</p>
+		  <div class="metadata">
+		    <p class="title"></p>
+		    <p class="author"></p>
 
-		  <div class="seekbar">
-		    <progress value="0" max="30"></progress>
+		    <div class="seekbar">
+		      <progress value="0" max="30"></progress>
+		    </div>
 		  </div>
 		</div>
-		</div>
 		<div class="cover">
-			<img src="https://i.scdn.co/image/04da6dfc1f5f45fdeba938a0cc71cf372524fd43">
+			<img src="">
 		</div>
 
-		<audio class="js-player" src="https://p.scdn.co/mp3-preview/8e9c5ffdc38e91659bfe8b6bd44650dfc25a3d31"></audio>
+		<audio class="js-player" src=""></audio>
+	</div>
+
+	<div class="modal fade js-modal" id="modal">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+
+	      <div class="modal-header">
+	        <!-- Close button -->
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span>&times;</span>
+	        </button>
+
+	        <h2 id="artist-name"></h2>
+	      </div>
+
+	      <div class="modal-body">
+	        <ul id="artist-info">
+	        </ul>
+	      </div>
+
+	    </div>
+	  </div>
 	</div>
 
 	<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 	<script type="text/javascript">
 		$('#search-button').on('click', function(event){
 			event.preventDefault();
@@ -45,9 +69,14 @@
 				var song = result.tracks.items[0];
 				console.log(song);
 				$('.title').text(song.name);
-				$('.author').text(song.artists[0].name);
+				//$('.author').text(song.artists[0].name);
 				$('.cover').children($('img').attr('src', song.album.images[0].url));
 				$('audio').attr('src', song.preview_url);
+				// $('.author-link').attr('href', song.artists[0].href);
+				//var author_link = '<button type="button" class="btn btn-link" id="' + song.artists[0].id + '">' + song.artists[0].name + '</button>';
+				var author_link = '<a class="artist-link" data-target="#modal" id="' + song.artists[0].id + '">' + song.artists[0].name + '</a>';
+				$('.author').empty();
+				$('.author').append(author_link);
 			}
 		});
 
@@ -62,14 +91,35 @@
 			$('.btn-play').toggleClass('playing');
 		});
 
+		$(document).on('click', '.artist-link', function(event){
+			$('#artist-name').empty();
+			$('#artist-info').empty();
+			$('.js-modal').modal();
+			var artistId = $('.artist-link').prop('id');
+			console.log("Artist");
+			console.log(artistId);
+			var url = 'https://api.spotify.com/v1/artists/' + artistId;
+			result = $.getJSON(url, showArtistInfo);
+			function showArtistInfo(result){
+				console.log("Artist info");
+				console.log(result);
+				var name = result.name;
+				var popularity = result.popularity;
+				var genres = result.genres;
+				var image = result.images[0].url;
+				$('#artist-name').text(name);
+				var info = '<img src="' + image +'" width="100" height="100"><li>Popularity: ' + popularity +'</li><li>Genres: ' + genres + '</li>';
+				$('#artist-info').append(info);
+			}
+		});
+
+
 		$('.js-player').on('timeupdate', printTime);
 
 		function printTime(){
 			var current = $('.js-player').prop('currentTime');
 			$('progress').prop('value', current);
-		}
-
-		
+		}		
 
 	</script>
 
