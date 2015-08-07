@@ -22,7 +22,7 @@
 		  <p class="author">alt-J</p>
 
 		  <div class="seekbar">
-		    <progress value="5" max="30"></progress>
+		    <progress value="0" max="30"></progress>
 		  </div>
 		</div>
 		</div>
@@ -61,6 +61,16 @@
 			}
 			$('.btn-play').toggleClass('playing');
 		});
+
+		$('.js-player').on('timeupdate', printTime);
+
+		function printTime(){
+			var current = $('.js-player').prop('currentTime');
+			$('progress').prop('value', current);
+		}
+
+		
+
 	</script>
 
 </body>
